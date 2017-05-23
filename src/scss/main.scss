@@ -1,0 +1,63 @@
+@charset 'UTF-8';
+
+// /*
+//  * Do not output CSS in section 1 and 2.
+//  * https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/
+//  */
+
+// /**
+//  * SETTINGS.
+//  * fonts, colors, variables
+//  */
+
+@import "1-Settings/**/*"; 
+
+/**
+ * TOOLS.
+ * Functions, mixins etc.
+ */
+
+@import '2-Tools/**/*';
+
+// /**
+//  * GENERIC.
+//  * Low-specificity, far-reaching rulesets, Resets & Normalizers,
+//  * box-sizing definitions.
+//  */
+
+@import '3-Generic/**/*';
+
+// /**
+//  * BASE.
+//  * Bare HTML styles & Unclassed HTML elements. (<p>, <body>)
+//  */
+
+@import '4-Base/**/*';
+
+// /**
+//  * OBJECTS.
+//  * Design-free objects, abstractions and patterns.
+//  */
+
+@import '5-Objects/**/*';
+
+// /**
+//  * VENDOR.
+//  * Third party components.
+//  */
+
+@import '8-Vendor/**/*';
+
+// /**
+//  * COMPONENTS.
+//  * Components and widgets.
+//  */
+
+@import '6-Components/**/*';
+
+// /**
+//  * TRUMPS.
+//  * Helper classes and overrides.
+//  */
+
+// @import '7-Helper/**/*';
