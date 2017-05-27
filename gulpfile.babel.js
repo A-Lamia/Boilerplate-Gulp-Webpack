@@ -17,7 +17,9 @@ import webpackHM from 'webpack-hot-middleware';
 import browserSync from 'browser-sync';
 
 const server = browserSync.create();
+
 const webpackConfig = require('./webpack.config');
+const webpackConfigProd = require('./webpack.config.prod');
 
 const paths = {
   base: './build',
@@ -70,7 +72,7 @@ export function scripts() {
   return gulp.src(paths.scripts.src)
     .pipe(plumber())
     .pipe(
-      webpackStream(webpackConfig, webpack)
+      webpackStream(gutil.env.type === 'prod' ? webpackConfigProd : webpackConfig, webpack)
       .on('error', (err) => {
         gutil.log('WEBPACK ERROR', err);
       }),

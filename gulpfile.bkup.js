@@ -7,12 +7,16 @@ const sassGlob = require('gulp-sass-glob');
 const cleanCss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
-const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
 const gutil = require('gulp-util');
+const plumber = require('gulp-plumber');
+const webpackStream = require('webpack-stream');
+const webpack = require('webpack');
 const browserSync = require('browser-sync');
 
 const server = browserSync.create();
+
+const webpackConfig = require('./webpack.config');
+const webpackConfigProd = require('./webpack.config.prod');
 
 const paths = {
   base: './build',
@@ -62,12 +66,14 @@ gulp.task('styles', () => {
 // Checks with '--type prod' to run production build.
 gulp.task('scripts', () => {
   gulp.src(paths.scripts.src)
-    .pipe(gutil.env.type === 'prod' ? gutil.noop() : sourcemaps.init())
-      .pipe(babel())
-      .pipe(concat('bundle.js'))
-      .pipe(uglify())
-    .pipe(gutil.env.type === 'prod' ? gutil.noop() : sourcemaps.write('./'))
-  .pipe(gulp.dest(paths.scripts.dest))
+    .pipe(plumber())
+    .pipe(
+      webpackStream(gutil.env.type === 'prod' ? webpackConfigProd : webpackConfig, webpack)
+      .on('error', (err) => {
+        gutil.log('WEBPACK ERROR', err);
+      }),
+    )
+    .pipe(gulp.dest(paths.scripts.dest))
   .pipe(server.reload({ stream: true }));
 });
 
