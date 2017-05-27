@@ -4,8 +4,6 @@ const webpack = require('webpack');
 module.exports = {
 
   entry: [
-    // 'webpack/hot/dev-server',
-    // 'webpack-hot-middleware/client',
     './src/scripts/index.js',
   ],
 
@@ -16,19 +14,16 @@ module.exports = {
   },
 
   plugins: [
-    // new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
   ],
   module: {
 
     rules: [
       {
         test: /\.js$/,
-        use: ['babel-loader', 'webpack-module-hot-accept'],
+        use: ['babel-loader'],
         exclude: /node_modules$/,
       },
     ],
   },
-  devtool: 'source-map',
 };

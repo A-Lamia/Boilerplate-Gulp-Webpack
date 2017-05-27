@@ -1,3 +1,13 @@
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 16px;
+  font-size: 1.6rem;
+  letter-spacing: 0.01rem;
+}
+
 .gigantic,
 .huge,
 .large,
@@ -9,12 +19,14 @@ h3,
 h4,
 h5,
 h6 {
-  color: #222;
+  color: #333;
   font-weight: bold;
+  font-family: fira sans;
 }
 
 .gigantic {
   font-size: 110px;
+  font-size: 11rem;
   letter-spacing: -2px;
   line-height: 1.09;
 }
@@ -22,6 +34,7 @@ h6 {
 .huge,
 h1 {
   font-size: 68px;
+  font-size: 6.8rem;
   letter-spacing: -1px;
   line-height: 1.05;
 }
@@ -29,28 +42,33 @@ h1 {
 .large,
 h2 {
   font-size: 42px;
+  font-size: 4.2rem;
   line-height: 1.14;
 }
 
 .bigger,
 h3 {
   font-size: 26px;
+  font-size: 2.6rem;
   line-height: 1.38;
 }
 
 .big,
 h4 {
   font-size: 22px;
+  font-size: 2.2rem;
   line-height: 1.38;
 }
 
 .small,
 small {
   font-size: 10px;
+  font-size: 1rem;
   line-height: 1.2;
 }
 
 p {
+  font-size: 2rem ;
   margin: 0 0 20px;
 }
 
@@ -62,10 +80,10 @@ strong {
   font-weight: bold;
 }
 
-hr {
-  border: solid #ddd;
-  border-width: 1px 0 0;
-  clear: both;
-  margin: 10px 0 30px;
-  height: 0;
-}
+// hr {
+//   border: solid #ddd;
+//   border-width: 1px 0 0;
+//   clear: both;
+//   margin: 10px 0 30px;
+//   height: 0;
+// }

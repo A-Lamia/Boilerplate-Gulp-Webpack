@@ -1,7 +1,17 @@
 .main {
   height: 85%;
+  // overflow: auto;
 }
 
 .name {
   text-align: center;
+}
+
+.text {
+  p {
+    width: 30%;
+    min-width: 299px;
+    margin: 0 auto;
+    text-align: center;
+  }
 }

@@ -36,15 +36,10 @@ if you want to run the production build the `build` task is using `gulp-util` to
 * [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer)
 * [gulp-clean-css](https://www.npmjs.com/package/gulp-clean-css)
 
-## Javascript
-
-### File structure
-
-### Dependencies
-
+# Webpack
+webpack
 ### Dev Dependencies
-* [gulp-babel](https://www.npmjs.com/package/gulp-babel)
-* [gulp-concat](https://www.npmjs.com/package/gulp-concat)
-* [gulp-uglify](https://www.npmjs.com/package/gulp-uglify)
+* [Webpack](https://www.npmjs.com/package/webpack)
+
 
  

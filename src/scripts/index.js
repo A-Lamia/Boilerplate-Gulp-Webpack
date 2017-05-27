@@ -2,10 +2,10 @@ function getName(name) {
   return console.log(`Hello ${name} how are you!`);
 }
 
-getName('MORE POWER');
+getName('smith');
 
 const check = () => {
-  return console.log('This is a check');
+  return console.log('Enter random text');
 };
 
 check();
