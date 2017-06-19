@@ -4,8 +4,8 @@ const webpack = require('webpack');
 module.exports = {
 
   entry: [
-    // 'webpack/hot/dev-server',
-    // 'webpack-hot-middleware/client',
+    'webpack/hot/dev-server',
+    'webpack-hot-middleware/client',
     './src/scripts/index.js',
   ],
 
@@ -30,5 +30,7 @@ module.exports = {
       },
     ],
   },
-  devtool: 'source-map',
+  // stats: 'none',
+  // devtool: 'source-map',
+  // devtool: 'inline-source-map',
 };
