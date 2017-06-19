@@ -1,17 +1,17 @@
-.main {
-  height: 85%;
-  // overflow: auto;
-}
+// .main {
+//   height: 85%;
+//   // overflow: auto;
+// }
 
 .name {
+  // display: block;
   text-align: center;
+  // margin: 0 auto;
 }
 
 .text {
-  p {
-    width: 30%;
-    min-width: 299px;
-    margin: 0 auto;
-    text-align: center;
-  }
+  margin: 0 auto;
+  min-width: 300px;
+  text-align: center;
+  width: 30%;
 }
