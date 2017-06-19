@@ -27,13 +27,12 @@ body {
 //  * Basic styles for links
 //  */
 a {
-  color: $link-color;
-  text-decoration: none;
-
   @include on-event {
     color: $link-active-color;
     text-decoration: underline;
   }
+  color: $link-color;
+  text-decoration: none;
 }
 
 // /**
@@ -43,14 +42,8 @@ a {
   background: $selection;
 }
 
-img::selection {
-  background: transparent;
-}
-
-img::-moz-selection {
-  background: transparent;
-}
-
-body {
-  -webkit-tap-highlight-color: #fff498;
+img {
+  ::selection {
+    background: transparent;
+  }
 }
