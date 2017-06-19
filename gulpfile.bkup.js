@@ -11,12 +11,16 @@ const gutil = require('gulp-util');
 const plumber = require('gulp-plumber');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
+const webpackDM = require('webpack-dev-middleware');
+const webpackHM = require('webpack-hot-middleware');
 const browserSync = require('browser-sync');
 
 const server = browserSync.create();
 
 const webpackConfig = require('./webpack.config');
 const webpackConfigProd = require('./webpack.config.prod');
+
+const bundler = webpack(webpackConfig);
 
 const paths = {
   base: './build',
@@ -87,7 +91,18 @@ gulp.task('serve', (done) => {
     server: {
       baseDir: './',
     },
+
+    middleware: [
+      webpackDM(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+        stats: { colors: true },
+        stats: 'errors-only',
+        // watch: true,
+      }),
+      webpackHM(bundler),
+    ],
   });
+
   done();
 });
 
@@ -103,15 +118,15 @@ gulp.task('watch', () => {
       console.log(`File ${path} was removed`);
       // code to execute on delete
     });
-  gulp.watch(paths.scripts.src, gulp.series('scripts'))
-    .on('change', (path, stats) => {
-      console.log(`File ${path} was changed`);
-      // code to execute on change
-    })
-    .on('unlink', (path, stats) => {
-      console.log(`File ${path} was removed`);
-      // code to execute on delete
-    });
+  // gulp.watch(paths.scripts.src, gulp.series('scripts'))
+  //   .on('change', (path, stats) => {
+  //     console.log(`File ${path} was changed`);
+  //     // code to execute on change
+  //   })
+  //   .on('unlink', (path, stats) => {
+  //     console.log(`File ${path} was removed`);
+  //     // code to execute on delete
+  //   });
   gulp.watch(paths.markup.src, gulp.series(reload))
     .on('change', (path, stats) => {
       console.log(`File ${path} was changed`);
@@ -126,7 +141,7 @@ gulp.task('watch', () => {
 gulp.task('build', gulp.series('clean', gulp.parallel('styles', 'scripts')));
 
 gulp.task('default',
-  gulp.series('clean', 'styles', 'scripts', 'serve', 'watch',
+  gulp.series('clean', 'styles', 'serve', 'watch',
   (done) => {
     done();
   }));

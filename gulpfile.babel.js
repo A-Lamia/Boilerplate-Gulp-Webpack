@@ -21,6 +21,8 @@ const server = browserSync.create();
 const webpackConfig = require('./webpack.config');
 const webpackConfigProd = require('./webpack.config.prod');
 
+const bundler = webpack(webpackConfig);
+
 const paths = {
   base: './build',
   styles: {
@@ -44,7 +46,6 @@ function reload(done) {
   server.reload();
   done();
 }
-
 
 // Style Tasks. SCSS -> CSS.
 // Checks with '--type prod' to run production build.
@@ -77,8 +78,8 @@ export function scripts() {
         gutil.log('WEBPACK ERROR', err);
       }),
     )
-    .pipe(gulp.dest(paths.scripts.dest))
-    .pipe(server.reload({ stream: true }));
+    .pipe(gulp.dest(paths.scripts.dest));
+    // .pipe(server.reload({ stream: true }));
 }
 
 function serve(done) {
@@ -88,14 +89,15 @@ function serve(done) {
     },
     open: false,
 
-    // middleware: [
-    //   webpackDM(webpackConfig, {
-    //     publicPath: paths.scripts.dest,
-    //     stats: { colors: true },
-    //     watch: true,
-    //   }),
-    //   webpackHM(webpackConfig),
-    // ],
+    middleware: [
+      webpackDM(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+        stats: { colors: true },
+        stats: 'errors-only',
+        // watch: true,
+      }),
+      webpackHM(bundler),
+    ],
   });
   done();
 }
@@ -113,7 +115,7 @@ export function watch() {
       console.log(`File ${path} was removed`);
       // code to execute on delete
     });
-  gulp.watch(paths.scripts.src, gulp.series(scripts))
+  gulp.watch(paths.scripts.src)
     .on('change', (path, stats) => {
       console.log(`File ${path} was changed`);
       // code to execute on change
@@ -136,7 +138,7 @@ export function watch() {
 
 export const build = gulp.series(clean, gulp.parallel(styles, scripts));
 
-const dev = gulp.series(clean, styles, scripts, serve, watch);
+const dev = gulp.series(clean, styles, serve, watch);
 // const dev = gulp.series(clean, styles, serve, watch);
 
 export default dev;
