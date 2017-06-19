@@ -5,15 +5,15 @@
 // /**
 //  * Set up a decent box model on the root element
 //  */
+html {
+  box-sizing: border-box;
+}
+
 // Set box-sizing globally to handle padding and border widths
 *,
 ::after,
 ::before {
   box-sizing: inherit;
-}
-
-html {
-  box-sizing: border-box;
 }
 
 // /**
