@@ -10,11 +10,11 @@
    Base styles: opinionated defaults
    ========================================================================== */
 
-html {
-    color: #222;
-    font-size: 1em;
-    line-height: 1.4;
-}
+// html {
+//     color: #222;
+//     font-size: 1em;
+//     line-height: 1.4;
+// }
 
 /*
  * Remove text-shadow in selection highlight:
@@ -24,21 +24,22 @@ html {
  * Customize the background color to match your design.
  */
 
-::-moz-selection {
-    background: #b3d4fc;
-    text-shadow: none;
-}
+// ::-moz-selection {
+//     background: #b3d4fc;
+//     text-shadow: none;
+// }
 
-::selection {
-    background: #b3d4fc;
-    text-shadow: none;
-}
+// ::selection {
+//     background: #b3d4fc;
+//     text-shadow: none;
+// }
 
 /*
  * A better looking default horizontal rule
  */
 
 hr {
+    clear: both;
     display: block;
     height: 1px;
     border: 0;

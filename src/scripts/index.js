@@ -1,4 +1,4 @@
-const check = () => console.log('Testing 1.. 2..');
+const check = () => console.log('Testing 1.. 2.. 3.. 4..');
 
 check();
 

@@ -1,15 +1,12 @@
-// .main {
-//   height: 85%;
-//   // overflow: auto;
-// }
-
 .name {
-  // display: block;
+  margin: 0 auto;
+  min-width: 300px;
   text-align: center;
-  // margin: 0 auto;
+  width: 30%;
 }
 
 .text {
+  @include ib(3px, #333, 1);
   margin: 0 auto;
   min-width: 300px;
   text-align: center;
