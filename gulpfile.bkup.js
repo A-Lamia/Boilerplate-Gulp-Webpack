@@ -49,21 +49,21 @@ function reload(done) {
 gulp.task('styles', () => {
   gulp.src(paths.styles.src)
     .pipe(gutil.env.type === 'prod' ? gutil.noop() : sourcemaps.init())
-      .pipe(sassGlob())
-      .pipe(sass())
-      .on('error', sass.logError)
-      .pipe(autoprefixer({
-        browsers: ['last 2 versions'],
-        cascade: false,
-      }))
-      .pipe(cleanCss())
-      .pipe(rename({
-        basename: 'main',
-        suffix: '.min',
-      }))
+    .pipe(sassGlob())
+    .pipe(sass())
+    .on('error', sass.logError)
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: false,
+    }))
+    .pipe(cleanCss())
+    .pipe(rename({
+      basename: 'main',
+      suffix: '.min',
+    }))
     .pipe(gutil.env.type === 'prod' ? gutil.noop() : sourcemaps.write('./'))
-  .pipe(gulp.dest(paths.styles.dest))
-  .pipe(server.reload({ stream: true }));
+    .pipe(gulp.dest(paths.styles.dest))
+    .pipe(server.reload({ stream: true }));
 });
 
 // JavaScript Tasks
@@ -73,12 +73,12 @@ gulp.task('scripts', () => {
     .pipe(plumber())
     .pipe(
       webpackStream(gutil.env.type === 'prod' ? webpackConfigProd : webpackConfig, webpack)
-      .on('error', (err) => {
-        gutil.log('WEBPACK ERROR', err);
-      }),
+        .on('error', (err) => {
+          gutil.log('WEBPACK ERROR', err);
+        }),
     )
     .pipe(gulp.dest(paths.scripts.dest))
-  .pipe(server.reload({ stream: true }));
+    .pipe(server.reload({ stream: true }));
 });
 
 // gulp.task('markup', () => {
@@ -142,6 +142,6 @@ gulp.task('build', gulp.series('clean', gulp.parallel('styles', 'scripts')));
 
 gulp.task('default',
   gulp.series('clean', 'styles', 'serve', 'watch',
-  (done) => {
-    done();
-  }));
+    (done) => {
+      done();
+    }));
