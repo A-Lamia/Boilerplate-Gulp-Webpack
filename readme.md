@@ -11,7 +11,6 @@ if you want to run the production build the `build` task is using `gulp-util` to
 ### Dev Dependencies
 * [babel-core](https://www.npmjs.com/package/babel-core)
 * [babel-preset-env](https://www.npmjs.com/package/babel-preset-env)
-* [babel-preset-es2015](https://www.npmjs.com/package/babel-preset-es2015)
 * [babel-register](https://www.npmjs.com/package/babel-register) / (need for `gulpfile-babel.js`)
 * [browser-sync](https://www.npmjs.com/package/browser-sync)
 * [del](https://www.npmjs.com/package/del) / (for gulp clean function.)
