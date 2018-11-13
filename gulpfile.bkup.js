@@ -1,5 +1,4 @@
 const gulp = require('gulp');
-const babel = require('gulp-babel');
 const del = require('del');
 const rename = require('gulp-rename');
 const sass = require('gulp-sass');
@@ -7,13 +6,21 @@ const sassGlob = require('gulp-sass-glob');
 const cleanCss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
-const gutil = require('gulp-util');
+const through2 = require('through2');
+const minimist = require('minimist');
+const log = require('fancy-log');
 const plumber = require('gulp-plumber');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const webpackDM = require('webpack-dev-middleware');
 const webpackHM = require('webpack-hot-middleware');
 const browserSync = require('browser-sync');
+
+const argv = minimist(process.argv.slice(2), {
+  string: 'type', // --lang prod
+});
+
+log(argv);
 
 const server = browserSync.create();
 
@@ -48,7 +55,7 @@ function reload(done) {
 // Checks with '--type prod' to run production build.
 gulp.task('styles', () => {
   gulp.src(paths.styles.src)
-    .pipe(gutil.env.type === 'prod' ? gutil.noop() : sourcemaps.init())
+    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass())
     .on('error', sass.logError)
@@ -61,7 +68,7 @@ gulp.task('styles', () => {
       basename: 'main',
       suffix: '.min',
     }))
-    .pipe(gutil.env.type === 'prod' ? gutil.noop() : sourcemaps.write('./'))
+    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.write('./'))
     .pipe(gulp.dest(paths.styles.dest))
     .pipe(server.reload({ stream: true }));
 });
@@ -72,9 +79,9 @@ gulp.task('scripts', () => {
   gulp.src(paths.scripts.src)
     .pipe(plumber())
     .pipe(
-      webpackStream(gutil.env.type === 'prod' ? webpackConfigProd : webpackConfig, webpack)
+      webpackStream(argv.type === 'prod' ? webpackConfigProd : webpackConfig, webpack)
         .on('error', (err) => {
-          gutil.log('WEBPACK ERROR', err);
+          log('WEBPACK ERROR', err);
         }),
     )
     .pipe(gulp.dest(paths.scripts.dest))
@@ -111,29 +118,29 @@ gulp.task('serve', (done) => {
 gulp.task('watch', () => {
   gulp.watch(paths.styles.src, gulp.series('styles'))
     .on('change', (path, stats) => {
-      console.log(`File ${path} was changed`);
+      log(`File ${path} was changed`);
       // code to execute on change
     })
     .on('unlink', (path, stats) => {
-      console.log(`File ${path} was removed`);
+      log(`File ${path} was removed`);
       // code to execute on delete
     });
-  // gulp.watch(paths.scripts.src, gulp.series('scripts'))
-  //   .on('change', (path, stats) => {
-  //     console.log(`File ${path} was changed`);
-  //     // code to execute on change
-  //   })
-  //   .on('unlink', (path, stats) => {
-  //     console.log(`File ${path} was removed`);
-  //     // code to execute on delete
-  //   });
-  gulp.watch(paths.markup.src, gulp.series(reload))
+  gulp.watch(paths.scripts.src)
     .on('change', (path, stats) => {
-      console.log(`File ${path} was changed`);
+      log(`File ${path} was changed`);
       // code to execute on change
     })
     .on('unlink', (path, stats) => {
-      console.log(`File ${path} was removed`);
+      log(`File ${path} was removed`);
+      // code to execute on delete
+    });
+  gulp.watch(paths.markup.src, gulp.series(reload))
+    .on('change', (path, stats) => {
+      log(`File ${path} was changed`);
+      // code to execute on change
+    })
+    .on('unlink', (path, stats) => {
+      log(`File ${path} was removed`);
       // code to execute on delete
     });
 });
