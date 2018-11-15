@@ -44,7 +44,7 @@ const paths = {
   },
 };
 
-gulp.task('clean', () => del(['build']));
+function clean(cb) { del(['build/css', 'build/js']); cb(); }
 
 function reload(done) {
   server.reload();
@@ -53,8 +53,8 @@ function reload(done) {
 
 // Style Tasks. SCSS -> CSS.
 // Checks with '--type prod' to run production build.
-gulp.task('styles', () => {
-  gulp.src(paths.styles.src)
+function styles(cb) {
+  return gulp.src(paths.styles.src, { since: gulp.lastRun(styles) })
     .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass())
@@ -71,12 +71,11 @@ gulp.task('styles', () => {
     .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.write('./'))
     .pipe(gulp.dest(paths.styles.dest))
     .pipe(server.reload({ stream: true }));
-});
+  cb();
+}
 
-// JavaScript Tasks
-// Checks with '--type prod' to run production build.
-gulp.task('scripts', () => {
-  gulp.src(paths.scripts.src)
+function scripts(cb) {
+  return gulp.src(paths.scripts.src)
     .pipe(plumber())
     .pipe(
       webpackStream(argv.type === 'prod' ? webpackConfigProd : webpackConfig, webpack)
@@ -84,39 +83,34 @@ gulp.task('scripts', () => {
           log('WEBPACK ERROR', err);
         }),
     )
-    .pipe(gulp.dest(paths.scripts.dest))
-    .pipe(server.reload({ stream: true }));
-});
+    .pipe(gulp.dest(paths.scripts.dest));
+  cb();
+}
 
-// gulp.task('markup', () => {
-//   return gulp.src(paths.markup.src)
-//   .pipe(server.reload({ stream: true }));
-// });
-
-gulp.task('serve', (done) => {
+function serve(done) {
   server.init({
     server: {
       baseDir: './',
     },
+    open: false,
 
     middleware: [
       webpackDM(bundler, {
         publicPath: webpackConfig.output.publicPath,
         stats: { colors: true },
         stats: 'errors-only',
-        // watch: true,
       }),
       webpackHM(bundler),
     ],
   });
-
   done();
-});
+}
+
 
 // Watch for changes in src and all HTML files.
 // Files: SCSS/SASS, JS, HTML
-gulp.task('watch', () => {
-  gulp.watch(paths.styles.src, gulp.series('styles'))
+function watch(cb) {
+  gulp.watch(paths.styles.src, gulp.series(styles))
     .on('change', (path, stats) => {
       log(`File ${path} was changed`);
       // code to execute on change
@@ -143,12 +137,11 @@ gulp.task('watch', () => {
       log(`File ${path} was removed`);
       // code to execute on delete
     });
-});
+  cb();
+}
 
-gulp.task('build', gulp.series('clean', gulp.parallel('styles', 'scripts')));
 
-gulp.task('default',
-  gulp.series('clean', 'styles', 'serve', 'watch',
-    (done) => {
-      done();
-    }));
+gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts)));
+
+gulp.task('default', gulp.series(clean, styles, serve, watch));
+
