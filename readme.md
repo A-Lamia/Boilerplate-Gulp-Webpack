@@ -10,12 +10,12 @@ if you want to run the production build the `build` task is using `minimist` to 
 
 ### Dev Dependencies
 * [@babel/core](https://www.npmjs.com/package/@babel/core)
-* [@babel/register](https://www.npmjs.com/package/@babel/register) / need for `gulpfile-babel.js`
+* [@babel/register](https://www.npmjs.com/package/@babel/register) / needed to run `gulpfile-babel.js`.
 * [@babel/preset-env](https://www.npmjs.com/package/@babel/preset-env)
 * [browser-sync](https://www.npmjs.com/package/browser-sync)
 * [bs-html-injector](https://www.npmjs.com/package/bs-html-injector)
 * [del](https://www.npmjs.com/package/del) / for gulp clean function.
-* [eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb) / eslint needs to be globaly installed.
+* [eslint-config-airbnb](https://www.npmjs.com/package/eslint-config-airbnb) / eslint needs to be globaly installed. `npm i eslint -g`
 * [fancy-log](https://www.npmjs.com/package/fancy-log)
 * [gulp](https://www.npmjs.com/package/gulp)
 * [gulp-autoprefixer](https://www.npmjs.com/package/gulp-autoprefixer)
@@ -35,7 +35,7 @@ if you want to run the production build the `build` task is using `minimist` to 
 * [webpack-stream](https://www.npmjs.com/package/webpack-stream)
 
 ### ___notice:___ 
-`gulp-util` as been depricated use [source](https://github.com/gulpjs/gulp-util) for more info on replacement libs.
+`gulp-util` has been depricated use [source](https://github.com/gulpjs/gulp-util) for more info on replacement libs.
 
 `gutil.noop()` can be replaced with the library `through2` code equivalent is `through2.obj()`
 
