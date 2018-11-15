@@ -1,15 +1,16 @@
 const gulp = require('gulp');
 const del = require('del');
 const rename = require('gulp-rename');
+const plumber = require('gulp-plumber');
 const sass = require('gulp-sass');
 const sassGlob = require('gulp-sass-glob');
 const cleanCss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
+const imagemin = require('gulp-imagemin');
 const through2 = require('through2');
 const minimist = require('minimist');
 const log = require('fancy-log');
-const plumber = require('gulp-plumber');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const webpackDM = require('webpack-dev-middleware');
@@ -41,6 +42,10 @@ const paths = {
   },
   markup: {
     src: './**/*.html',
+  },
+  images: {
+    src: './src/img/**/*',
+    dest: './build/img',
   },
 };
 
@@ -106,6 +111,23 @@ function serve(done) {
   done();
 }
 
+function images(cb) {
+  gulp.src(paths.images.src, { since: gulp.lastRun(styles) })
+    .pipe(imagemin([
+      imagemin.gifsicle({ interlaced: true }),
+      imagemin.jpegtran({ progressive: true }),
+      imagemin.optipng({ optimizationLevel: 5 }),
+      imagemin.svgo({
+        plugins: [
+          { removeViewBox: true },
+          { cleanupIDs: false },
+        ],
+      }),
+    ]))
+    .pipe(gulp.dest(paths.images.dest));
+  cb();
+}
+
 
 // Watch for changes in src and all HTML files.
 // Files: SCSS/SASS, JS, HTML
@@ -137,11 +159,21 @@ function watch(cb) {
       log(`File ${path} was removed`);
       // code to execute on delete
     });
+  gulp.watch(paths.images.src, gulp.series(images))
+    .on('change', (path, stats) => {
+      log(`File ${path} was changed`);
+      // code to execute on change
+    })
+    .on('unlink', (path, stats) => {
+      log(`File ${path} was removed`);
+      // code to execute on delete
+    });
   cb();
 }
 
+gulp.task('img', gulp.series(clean, images));
 
-gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts)));
+gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts, images)));
 
-gulp.task('default', gulp.series(clean, styles, serve, watch));
+gulp.task('default', gulp.series(clean, styles, serve, images, watch));
 

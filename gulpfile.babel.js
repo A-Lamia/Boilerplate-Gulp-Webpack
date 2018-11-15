@@ -2,15 +2,16 @@ import '@babel/register';
 import gulp from 'gulp';
 import del from 'del';
 import rename from 'gulp-rename';
+import plumber from 'gulp-plumber';
 import sass from 'gulp-sass';
 import sassGlob from 'gulp-sass-glob';
 import cleanCss from 'gulp-clean-css';
 import sourcemaps from 'gulp-sourcemaps';
 import autoprefixer from 'gulp-autoprefixer';
+import imagemin from 'gulp-imagemin';
 import through2 from 'through2';
 import minimist from 'minimist';
 import log from 'fancy-log';
-import plumber from 'gulp-plumber';
 import webpackStream from 'webpack-stream';
 import webpack from 'webpack';
 import webpackDM from 'webpack-dev-middleware';
@@ -42,6 +43,10 @@ const paths = {
   },
   markup: {
     src: './**/*.html',
+  },
+  images: {
+    src: './src/img/**/*',
+    dest: './build/img/',
   },
 };
 
@@ -105,6 +110,23 @@ function serve(done) {
   done();
 }
 
+export function images(cb) {
+  gulp.src(paths.images.src, { since: gulp.lastRun(styles) })
+    .pipe(imagemin([
+      imagemin.gifsicle({ interlaced: true }),
+      imagemin.jpegtran({ progressive: true }),
+      imagemin.optipng({ optimizationLevel: 5 }),
+      imagemin.svgo({
+        plugins: [
+          { removeViewBox: true },
+          { cleanupIDs: false },
+        ],
+      }),
+    ]))
+    .pipe(gulp.dest(paths.images.dest));
+  cb();
+}
+
 
 // Watch for changes in src and all HTML files.
 // Files: SCSS/SASS, JS, HTML
@@ -136,11 +158,22 @@ export function watch() {
       log(`File ${path} was removed`);
       // code to execute on delete
     });
+  gulp.watch(paths.images.src, gulp.series(images))
+    .on('change', (path, stats) => {
+      log(`File ${path} was changed`);
+      // code to execute on change
+    })
+    .on('unlink', (path, stats) => {
+      log(`File ${path} was removed`);
+      // code to execute on delete
+    });
 }
 
 
-export const build = gulp.series(clean, gulp.parallel(styles, scripts));
+export const img = gulp.series(images);
 
-const dev = gulp.series(clean, styles, serve, watch);
+export const build = gulp.series(clean, gulp.parallel(styles, scripts, images));
+
+const dev = gulp.series(clean, styles, serve, images, watch);
 
 export default dev;
