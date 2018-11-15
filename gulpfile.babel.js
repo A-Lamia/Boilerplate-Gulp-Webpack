@@ -89,7 +89,7 @@ export function scripts() {
 function serve(done) {
   server.init({
     server: {
-      baseDir: './',
+      baseDir: './build',
     },
     open: false,
 
