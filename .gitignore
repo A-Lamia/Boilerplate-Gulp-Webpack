@@ -55,6 +55,5 @@ yarn-error.log
 .vscode/
 .vs/
 
-# Build 
-build/
+# Build
 app/
