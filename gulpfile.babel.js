@@ -45,9 +45,7 @@ const paths = {
   },
 };
 
-export const clean = () => del(['build']);
-
-// export const reload = (done) => { server.reload(); done(); };
+export const clean = () => del(['build/css', 'build/js']);
 
 function reload(done) {
   server.reload();
@@ -57,7 +55,7 @@ function reload(done) {
 // Style Tasks. SCSS -> CSS.
 // Checks with '--type prod' to run production build.
 export function styles() {
-  return gulp.src(paths.styles.src)
+  return gulp.src(paths.styles.src, { since: gulp.lastRun(styles) })
     .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass())
@@ -86,7 +84,6 @@ export function scripts() {
         }),
     )
     .pipe(gulp.dest(paths.scripts.dest));
-  // .pipe(server.reload({ stream: true }));
 }
 
 function serve(done) {
@@ -145,6 +142,5 @@ export function watch() {
 export const build = gulp.series(clean, gulp.parallel(styles, scripts));
 
 const dev = gulp.series(clean, styles, serve, watch);
-// const dev = gulp.series(clean, styles, serve, watch);
 
 export default dev;
