@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   mode: 'production',
@@ -15,13 +16,19 @@ module.exports = {
 
   plugins: [
     new webpack.optimize.ModuleConcatenationPlugin(),
+    new BundleAnalyzerPlugin(),
   ],
   module: {
 
     rules: [
       {
         test: /\.js$/,
-        use: ['babel-loader'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            // presets: ['@babel/preset-env', { modules: false }],
+          },
+        },
         exclude: /node_modules$/,
       },
     ],
