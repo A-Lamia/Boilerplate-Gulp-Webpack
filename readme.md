@@ -38,9 +38,9 @@ HTML live loading (`bs-html-injector`) is enabled by default, there is currently
 >>>
 ### ___notice:___ 
 `gulp-util` has been depricated use [source](https://github.com/gulpjs/gulp-util) for more info on replacement libs.
->>>
 
 `gutil.noop()` can be replaced with the library `through2` code equivalent is `through2.obj()`
+>>>
 * [@babel/core](https://www.npmjs.com/package/@babel/core)
 * [@babel/register](https://www.npmjs.com/package/@babel/register) / needed to run `gulpfile-babel.js`.
 * [@babel/preset-env](https://www.npmjs.com/package/@babel/preset-env)
