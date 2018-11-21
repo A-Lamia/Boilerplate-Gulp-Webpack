@@ -16,6 +16,7 @@ const webpack = require('webpack');
 const webpackDM = require('webpack-dev-middleware');
 const webpackHM = require('webpack-hot-middleware');
 const browserSync = require('browser-sync');
+const htmlInjector = require('bs-html-injector');
 
 const argv = minimist(process.argv.slice(2), {
   string: 'type', // --lang prod
@@ -23,7 +24,7 @@ const argv = minimist(process.argv.slice(2), {
 
 log(argv);
 
-const server = browserSync.create();
+const bs = browserSync.create();
 
 const webpackConfig = require('./webpack.config');
 const webpackConfigProd = require('./webpack.config.prod');
@@ -37,11 +38,11 @@ const paths = {
     dest: './build/css/',
   },
   scripts: {
-    src: 'src/scripts/**/*.js',
+    src: './src/scripts/**/*.js',
     dest: './build/js/',
   },
   markup: {
-    src: './**/*.html',
+    src: './build/**/*.html',
   },
   images: {
     src: './src/img/**/*',
@@ -52,7 +53,7 @@ const paths = {
 function clean(cb) { del(['build/css', 'build/js']); cb(); }
 
 function reload(done) {
-  server.reload();
+  bs.reload();
   done();
 }
 
@@ -75,7 +76,7 @@ function styles(cb) {
     }))
     .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.write('./'))
     .pipe(gulp.dest(paths.styles.dest))
-    .pipe(server.reload({ stream: true }));
+    .pipe(bs.reload({ stream: true }));
   cb();
 }
 
@@ -93,7 +94,10 @@ function scripts(cb) {
 }
 
 function serve(done) {
-  server.init({
+  bs.use(htmlInjector, {
+    files: paths.markup.src,
+  });
+  bs.init({
     server: {
       baseDir: './',
     },
@@ -150,15 +154,15 @@ function watch(cb) {
       log(`File ${path} was removed`);
       // code to execute on delete
     });
-  gulp.watch(paths.markup.src, gulp.series(reload))
-    .on('change', (path, stats) => {
-      log(`File ${path} was changed`);
-      // code to execute on change
-    })
-    .on('unlink', (path, stats) => {
-      log(`File ${path} was removed`);
-      // code to execute on delete
-    });
+  // gulp.watch(paths.markup.src, gulp.series(reload))
+  //   .on('change', (path, stats) => {
+  //     log(`File ${path} was changed`);
+  //     // code to execute on change
+  //   })
+  //   .on('unlink', (path, stats) => {
+  //     log(`File ${path} was removed`);
+  //     // code to execute on delete
+  //   });
   gulp.watch(paths.images.src, gulp.series(images))
     .on('change', (path, stats) => {
       log(`File ${path} was changed`);
