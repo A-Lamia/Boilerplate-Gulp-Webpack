@@ -1,4 +1,5 @@
 import '@babel/register';
+import path from 'path';
 import gulp from 'gulp';
 import del from 'del';
 import rename from 'gulp-rename';
@@ -33,25 +34,30 @@ const webpackConfigProd = require('./webpack.config.prod');
 const bundler = webpack(webpackConfig);
 
 const paths = {
-  base: './build',
+  base: path.resolve(__dirname),
+  build: {
+    css: path.resolve(__dirname, './build/css'),
+    js: path.resolve(__dirname, './build/js'),
+    base: path.resolve(__dirname, './build'),
+  },
   styles: {
-    src: './src/scss/**/*.scss',
-    dest: './build/css/',
+    src: path.resolve(__dirname, './src/scss/**/*.scss'),
+    dest: path.resolve(__dirname, './build/css/'),
   },
   scripts: {
-    src: 'src/scripts/**/*.js',
-    dest: './build/js/',
+    src: path.resolve(__dirname, 'src/scripts/**/*.js'),
+    dest: path.resolve(__dirname, './build/js/'),
   },
   markup: {
-    src: './build/**/*.html',
+    src: path.resolve(__dirname, './build/**/*.html'),
   },
   images: {
-    src: './src/img/**/*',
-    dest: './build/img/',
+    src: path.resolve(__dirname, './src/img/**/*'),
+    dest: path.resolve(__dirname, './build/img/'),
   },
 };
 
-export const clean = () => del(['build/css', 'build/js']);
+export const clean = () => del([paths.build.css, paths.build.js]);
 
 function reload(done) {
   bs.reload();
@@ -98,7 +104,7 @@ function serve(done) {
   });
   bs.init({
     server: {
-      baseDir: './build',
+      baseDir: paths.build.base,
     },
     open: false,
 
