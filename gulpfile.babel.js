@@ -142,39 +142,39 @@ export function images(cb) {
 // Files: SCSS/SASS, JS, HTML, png/jpg/svg/gif
 export function watch() {
   gulp.watch(paths.styles.src, gulp.series(styles))
-    .on('change', (path, stats) => {
-      log(`File ${path} was changed`);
+    .on('change', (location) => {
+      log(`File ${location} was changed`);
       // code to execute on change
     })
-    .on('unlink', (path, stats) => {
-      log(`File ${path} was removed`);
+    .on('unlink', (location) => {
+      log(`File ${location} was removed`);
       // code to execute on delete
     });
   gulp.watch(paths.scripts.src)
-    .on('change', (path, stats) => {
-      log(`File ${path} was changed`);
+    .on('change', (location) => {
+      log(`File ${location} was changed`);
       // code to execute on change
     })
-    .on('unlink', (path, stats) => {
-      log(`File ${path} was removed`);
+    .on('unlink', (location) => {
+      log(`File ${location} was removed`);
       // code to execute on delete
     });
   // gulp.watch(paths.markup.src, gulp.series(reload))
-  //   .on('change', (path, stats) => {
-  //     log(`File ${path} was changed`);
+  //   .on('change', (location) => {
+  //     log(`File ${location} was changed`);
   //     // code to execute on change
   //   })
-  //   .on('unlink', (path, stats) => {
-  //     log(`File ${path} was removed`);
+  //   .on('unlink', (location, stats) => {
+  //     log(`File ${location} was removed`);
   //     // code to execute on delete
   //   });
   gulp.watch(paths.images.src, gulp.series(images))
-    .on('change', (path, stats) => {
-      log(`File ${path} was changed`);
+    .on('change', (location) => {
+      log(`File ${location} was changed`);
       // code to execute on change
     })
-    .on('unlink', (path, stats) => {
-      log(`File ${path} was removed`);
+    .on('unlink', (location) => {
+      log(`File ${location} was removed`);
       // code to execute on delete
     });
 }
