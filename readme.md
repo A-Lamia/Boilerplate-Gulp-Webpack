@@ -62,6 +62,7 @@ HTML live loading (`bs-html-injector`) is enabled by default, there is currently
 * [minimist](https://www.npmjs.com/package/minimist)
 * [through2](https://www.npmjs.com/package/through2)
 * [Webpack](https://www.npmjs.com/package/webpack)
+* [webpack-bundle-analyzer](https://www.npmjs.com/package/webpack-bundle-analyzer)
 * [webpack-dev-middleware](https://www.npmjs.com/package/webpack-dev-middleware)
 * [webpack-hot-middleware](https://www.npmjs.com/package/webpack-hot-middleware)
 * [webpack-module-hot-accept](https://www.npmjs.com/package/webpack-module-hot-accept)
