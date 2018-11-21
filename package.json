@@ -39,6 +39,7 @@
     "minimist": "^1.2.0",
     "through2": "^3.0.0",
     "webpack": "^4.25.1",
+    "webpack-bundle-analyzer": "^3.0.3",
     "webpack-dev-middleware": "^3.4.0",
     "webpack-hot-middleware": "^2.24.3",
     "webpack-module-hot-accept": "^1.0.5",
