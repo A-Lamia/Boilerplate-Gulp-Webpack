@@ -36,24 +36,24 @@ const bundler = webpack(webpackConfig);
 const paths = {
   base: path.resolve(__dirname),
   build: {
-    css: path.resolve(__dirname, './build/css'),
-    js: path.resolve(__dirname, './build/js'),
-    base: path.resolve(__dirname, './build'),
+    css: './build/css',
+    js: './build/js',
+    base: './build',
   },
   styles: {
-    src: path.resolve(__dirname, './src/scss/**/*.scss'),
-    dest: path.resolve(__dirname, './build/css/'),
+    src: './src/scss/**/*.scss',
+    dest: './build/css/',
   },
   scripts: {
-    src: path.resolve(__dirname, 'src/scripts/**/*.js'),
-    dest: path.resolve(__dirname, './build/js/'),
+    src: 'src/scripts/**/*.js',
+    dest: './build/js/',
   },
   markup: {
-    src: path.resolve(__dirname, './build/**/*.html'),
+    src: './build/**/*.html',
   },
   images: {
-    src: path.resolve(__dirname, './src/img/**/*'),
-    dest: path.resolve(__dirname, './build/img/'),
+    src: './src/img/**/*',
+    dest: './build/img/',
   },
 };
 
@@ -67,7 +67,7 @@ function reload(done) {
 // Style Tasks. SCSS -> CSS.
 // Checks with '--type prod' to run production build.
 export function styles() {
-  return gulp.src(paths.styles.src, { since: gulp.lastRun(styles) })
+  return gulp.src(paths.styles.src)
     .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.init())
     .pipe(sassGlob())
     .pipe(sass())
@@ -111,6 +111,8 @@ function serve(done) {
     middleware: [
       webpackDM(bundler, {
         publicPath: webpackConfig.output.publicPath,
+        contentBase: paths.build.base,
+        hot: true,
         stats: { colors: true },
         stats: 'errors-only',
       }),
@@ -164,7 +166,7 @@ export function watch() {
   //     log(`File ${location} was changed`);
   //     // code to execute on change
   //   })
-  //   .on('unlink', (location, stats) => {
+  //   .on('unlink', (location) => {
   //     log(`File ${location} was removed`);
   //     // code to execute on delete
   //   });
