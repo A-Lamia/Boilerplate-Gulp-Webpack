@@ -9,9 +9,9 @@ module.exports = {
   ],
 
   output: {
-    path: path.resolve(__dirname, 'build/js/'),
-    publicPath: '/build/js/',
     filename: 'build.js',
+    path: path.join(__dirname, 'build', 'js'),
+    publicPath: '/build/',
   },
 
   plugins: [
