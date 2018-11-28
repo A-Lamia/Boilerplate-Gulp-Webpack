@@ -11,13 +11,11 @@ module.exports = {
   ],
 
   output: {
-    path: path.resolve(__dirname, 'build/js/'),
-    publicPath: '/build/js/',
     filename: 'build.js',
+    path: path.join(__dirname, 'build', 'js'),
+    publicPath: '/build/js',
   },
-
   plugins: [
-    // new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new BundleAnalyzerPlugin({ openAnalyzer: false }),
