@@ -73,7 +73,7 @@ export function styles() {
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(autoprefixer({
-      browsers: ['last 2 versions'],
+      overrideBrowserlist: ['last 2 versions'],
       cascade: false,
     }))
     .pipe(cleanCss())
