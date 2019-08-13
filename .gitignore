@@ -37,6 +37,9 @@ jspm_packages
 # Npm lock json file.
 package-lock.json
 
+# Pnpm lock yaml file.
+pnpm-lock.yaml
+
 # Optional eslint cache
 .eslintcache
 
