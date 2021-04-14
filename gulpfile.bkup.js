@@ -30,7 +30,7 @@ const bs = browserSync.create();
 const webpackConfig = require('./webpack.config');
 const webpackConfigProd = require('./webpack.config.prod');
 
-const bundler = webpack(webpackConfig);
+const compiler = webpack(webpackConfig);
 
 const paths = {
   base: path.resolve(__dirname),
@@ -110,12 +110,12 @@ function serve(done) {
     open: false,
 
     middleware: [
-      webpackDM(bundler, {
+      webpackDM(compiler, {
         publicPath: webpackConfig.output.publicPath,
         stats: { colors: true },
         stats: 'errors-only',
       }),
-      webpackHM(bundler),
+      webpackHM(compiler),
     ],
   });
   done();
@@ -125,7 +125,7 @@ function images(cb) {
   gulp.src(paths.images.src, { since: gulp.lastRun(styles) })
     .pipe(imagemin([
       imagemin.gifsicle({ interlaced: true }),
-      imagemin.jpegtran({ progressive: true }),
+      imagemin.mozjpeg({quality: 75, progressive: true}),
       imagemin.optipng({ optimizationLevel: 5 }),
       imagemin.svgo({
         plugins: [
