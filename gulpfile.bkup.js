@@ -3,7 +3,7 @@ const gulp = require('gulp');
 const del = require('del');
 const rename = require('gulp-rename');
 const plumber = require('gulp-plumber');
-const sass = require('gulp-sass');
+const sass = require('gulp-sass-no-nodesass');
 const sassGlob = require('gulp-sass-glob');
 const cleanCss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
@@ -12,6 +12,7 @@ const imagemin = require('gulp-imagemin');
 const through2 = require('through2');
 const minimist = require('minimist');
 const log = require('fancy-log');
+const Fiber = reqire('fibers');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const webpackDM = require('webpack-dev-middleware');
@@ -31,6 +32,8 @@ const webpackConfig = require('./webpack.config');
 const webpackConfigProd = require('./webpack.config.prod');
 
 const compiler = webpack(webpackConfig);
+
+sass.compiler = require('sass');
 
 const paths = {
   base: path.resolve(__dirname),
@@ -67,7 +70,7 @@ function reload(done) {
 // Checks with '--type prod' to run production build.
 function styles(cb) {
   return gulp.src(paths.styles.src, { since: gulp.lastRun(styles) })
-    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.init())
+    .pipe(argv.debug === 'yes' ? sourcemaps.init() : through2.obj())
     .pipe(sassGlob())
     .pipe(sass())
     .on('error', sass.logError)
@@ -75,12 +78,13 @@ function styles(cb) {
       browsers: ['last 2 versions'],
       cascade: false,
     }))
-    .pipe(cleanCss())
+    .pipe(argv.type === 'prod' ? cleanCss() : through2.obj())
+    .pipe(argv.clean === 'yes' ? cleanCss() : through2.obj())
     .pipe(rename({
       basename: 'main',
       suffix: '.min',
     }))
-    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.write('./'))
+    .pipe(argv.debug === 'debug' ? sourcemaps.write('./') : through2.obj())
     .pipe(gulp.dest(paths.styles.dest))
     .pipe(bs.reload({ stream: true }));
   cb();
