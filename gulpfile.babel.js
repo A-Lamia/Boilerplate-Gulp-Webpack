@@ -117,8 +117,6 @@ function serve(done) {
     middleware: [
       webpackDM(compiler, {
         publicPath: webpackConfig.output.publicPath,
-        contentBase: paths.build.base,
-        hot: true,
         stats: { colors: true },
         stats: 'errors-only',
       }),
