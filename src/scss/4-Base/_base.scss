@@ -1,3 +1,6 @@
+@use '1-Settings/colors';
+@use '2-Tools/mixins' as *;
+
 // -----------------------------------------------------------------------------
 // This file contains very basic styles.
 // -----------------------------------------------------------------------------
@@ -20,7 +23,7 @@ html {
 //  *  Base body and html
 //  **/
 body {
-  background-image: linear-gradient(-90deg, $background);
+  background-image: linear-gradient(-90deg, colors.$background);
 }
 
 // /**
@@ -28,10 +31,10 @@ body {
 //  */
 a {
   @include on-event {
-    color: $link-active-color;
+    color: colors.$link-active-color;
     text-decoration: underline;
   }
-  color: $link-color;
+  color: colors.$link-color;
   text-decoration: none;
 }
 
@@ -39,7 +42,7 @@ a {
 //  * Selection
 //  */
 ::selection {
-  background: $selection;
+  background: colors.$selection;
   text-shadow: none;
 }
 

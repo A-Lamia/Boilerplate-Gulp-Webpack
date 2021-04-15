@@ -10,14 +10,14 @@
 //  * fonts, colors, variables
 //  */
 
-@import "1-Settings/**/*";
+@forward "1-Settings";
 
 // /**
 //  * TOOLS.
 //  * Functions, mixins etc.
 //  */
 
-@import '2-Tools/**/*';
+@forward '2-Tools';
 
 // /**
 //  * GENERIC.
@@ -25,39 +25,39 @@
 //  * box-sizing definitions.
 //  */
 
-@import '3-Generic/**/*';
+@forward '3-Generic';
 
 // /**
 //  * BASE.
 //  * Bare HTML styles & Unclassed HTML elements. (<p>, <body>)
 //  */
 
-@import '4-Base/**/*';
+@forward '4-Base';
 
 // /**
 //  * OBJECTS.
 //  * Design-free objects, abstractions and patterns.
 //  */
 
-@import '5-Objects/**/*';
+@forward '5-Objects';
 
 // /**
 //  * VENDOR.
 //  * Third party components.
 //  */
 
-@import '8-Vendor/**/*';
+@forward '8-Vendor';
 
 // /**
 //  * COMPONENTS.
 //  * Components and widgets.
 //  */
 
-@import '6-Components/**/*';
+@forward '6-Components';
 
 // /**
 //  * TRUMPS.
 //  * Helper classes and overrides.
 //  */
 
-// @import '7-Helper/**/*';
+// @forward '7-Helper';

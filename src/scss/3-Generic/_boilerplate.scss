@@ -11,11 +11,11 @@
    Base styles: opinionated defaults
    ========================================================================== */
 
-   html {
-    color: #222;
-    font-size: 1em;
-    line-height: 1.4;
-  }
+  //  html {
+  //   color: #222;
+  //   font-size: 1em;
+  //   line-height: 1.4;
+  // }
   
   /*
    * Remove text-shadow in selection highlight:
@@ -95,10 +95,10 @@
    * Hide visually and from screen readers
    */
   
-  .hidden,
-  [hidden] {
-    display: none !important;
-  }
+  // .hidden,
+  // [hidden] {
+  //   display: none !important;
+  // }
   
   /*
    * Hide only visually, but have it available for screen readers:
@@ -109,18 +109,18 @@
    *    https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
    */
   
-  .sr-only {
-    border: 0;
-    clip: rect(0, 0, 0, 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-    /* 1 */
-  }
+  // .sr-only {
+  //   border: 0;
+  //   clip: rect(0, 0, 0, 0);
+  //   height: 1px;
+  //   margin: -1px;
+  //   overflow: hidden;
+  //   padding: 0;
+  //   position: absolute;
+  //   white-space: nowrap;
+  //   width: 1px;
+  //   /* 1 */
+  // }
   
   /*
    * Extends the .sr-only class to allow the element
@@ -128,24 +128,24 @@
    * https://www.drupal.org/node/897638
    */
   
-  .sr-only.focusable:active,
-  .sr-only.focusable:focus {
-    clip: auto;
-    height: auto;
-    margin: 0;
-    overflow: visible;
-    position: static;
-    white-space: inherit;
-    width: auto;
-  }
+  // .sr-only.focusable:active,
+  // .sr-only.focusable:focus {
+  //   clip: auto;
+  //   height: auto;
+  //   margin: 0;
+  //   overflow: visible;
+  //   position: static;
+  //   white-space: inherit;
+  //   width: auto;
+  // }
   
   /*
    * Hide visually and from screen readers, but maintain layout
    */
   
-  .invisible {
-    visibility: hidden;
-  }
+  // .invisible {
+  //   visibility: hidden;
+  // }
   
   /*
    * Clearfix: contain floats
@@ -159,15 +159,15 @@
    *    `:before` to contain the top-margins of child elements.
    */
   
-  .clearfix::before,
-  .clearfix::after {
-    content: " ";
-    display: table;
-  }
+  // .clearfix::before,
+  // .clearfix::after {
+  //   content: " ";
+  //   display: table;
+  // }
   
-  .clearfix::after {
-    clear: both;
-  }
+  // .clearfix::after {
+  //   clear: both;
+  // }
   
   /* ==========================================================================
      EXAMPLE Media Queries for Responsive Design.
@@ -175,16 +175,16 @@
      Modify as content requires.
      ========================================================================== */
   
-  @media only screen and (min-width: 35em) {
-    /* Style adjustments for viewports that meet the condition */
-  }
+  // @media only screen and (min-width: 35em) {
+  //   /* Style adjustments for viewports that meet the condition */
+  // }
   
-  @media print,
-    (-webkit-min-device-pixel-ratio: 1.25),
-    (min-resolution: 1.25dppx),
-    (min-resolution: 120dpi) {
-    /* Style adjustments for high resolution devices */
-  }
+  // @media print,
+  //   (-webkit-min-device-pixel-ratio: 1.25),
+  //   (min-resolution: 1.25dppx),
+  //   (min-resolution: 120dpi) {
+  //   /* Style adjustments for high resolution devices */
+  // }
   
   /* ==========================================================================
      Print styles.
