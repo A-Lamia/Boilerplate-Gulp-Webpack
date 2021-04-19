@@ -22,6 +22,7 @@ import htmlInjector from 'bs-html-injector';
 
 const argv = minimist(process.argv.slice(2), {
   string: 'mode', // --mode prod
+  boolean: 'noinject',
   boolean: 'debug', // --debug bool
   boolean: 'source', // --debug bool
   boolean: 'clean', // --clean bool
@@ -104,7 +105,7 @@ export function scripts() {
 }
 
 function serve(done) {
-  bs.use(htmlInjector, {
+  argv.noinject ? through2.obj() : bs.use(htmlInjector, {
     files: paths.markup.src,
   });
   bs.init({
@@ -164,15 +165,17 @@ export function watch() {
       log(`File ${location} was removed`);
       // code to execute on delete
     });
-  // gulp.watch(paths.markup.src, gulp.series(reload))
-  //   .on('change', (location) => {
-  //     log(`File ${location} was changed`);
-  //     // code to execute on change
-  //   })
-  //   .on('unlink', (location) => {
-  //     log(`File ${location} was removed`);
-  //     // code to execute on delete
-  //   });
+  argv.noinject ?
+  gulp.watch(paths.markup.src, gulp.series(reload))
+    .on('change', (location) => {
+      log(`File ${location} was changed`);
+      // code to execute on change
+    })
+    .on('unlink', (location) => {
+      log(`File ${location} was removed`);
+      // code to execute on delete
+    }) 
+    : through2.obj();
   gulp.watch(paths.images.src, gulp.series(images))
     .on('change', (location) => {
       log(`File ${location} was changed`);
