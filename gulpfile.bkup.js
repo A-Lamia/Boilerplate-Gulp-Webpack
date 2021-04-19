@@ -3,8 +3,7 @@ const gulp = require('gulp');
 const del = require('del');
 const rename = require('gulp-rename');
 const plumber = require('gulp-plumber');
-const sass = require('gulp-sass');
-const sassGlob = require('gulp-sass-glob');
+const sass = require('gulp-sass-no-nodesass');
 const cleanCss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
@@ -12,6 +11,7 @@ const imagemin = require('gulp-imagemin');
 const through2 = require('through2');
 const minimist = require('minimist');
 const log = require('fancy-log');
+const Fiber = reqire('fibers');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const webpackDM = require('webpack-dev-middleware');
@@ -20,7 +20,10 @@ const browserSync = require('browser-sync');
 const htmlInjector = require('bs-html-injector');
 
 const argv = minimist(process.argv.slice(2), {
-  string: 'type', // --lang prod
+  string: 'type', //--type = prod
+  boolean: 'debug', // --debug bool
+  boolean: 'source', // --debug bool
+  boolean: 'clean', // --clean bool
 });
 
 log(argv);
@@ -31,6 +34,8 @@ const webpackConfig = require('./webpack.config');
 const webpackConfigProd = require('./webpack.config.prod');
 
 const compiler = webpack(webpackConfig);
+
+sass.compiler = require('sass');
 
 const paths = {
   base: path.resolve(__dirname),
@@ -67,20 +72,20 @@ function reload(done) {
 // Checks with '--type prod' to run production build.
 function styles(cb) {
   return gulp.src(paths.styles.src, { since: gulp.lastRun(styles) })
-    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.init())
-    .pipe(sassGlob())
+    .pipe(argv.debug || argv.source ? sourcemaps.init() : through2.obj())
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(autoprefixer({
       browsers: ['last 2 versions'],
       cascade: false,
     }))
-    .pipe(cleanCss())
+    .pipe(argv.type === 'prod' ? cleanCss() : through2.obj())
+    .pipe(argv.debug || argv.clean ? cleanCss() : through2.obj())
     .pipe(rename({
       basename: 'main',
       suffix: '.min',
     }))
-    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.write('./'))
+    .pipe(argv.debug || argv.source ? sourcemaps.write('./') : through2.obj())
     .pipe(gulp.dest(paths.styles.dest))
     .pipe(bs.reload({ stream: true }));
   cb();

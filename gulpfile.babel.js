@@ -4,8 +4,7 @@ import gulp from 'gulp';
 import del from 'del';
 import rename from 'gulp-rename';
 import plumber from 'gulp-plumber';
-import sass from 'gulp-sass';
-import sassGlob from 'gulp-sass-glob';
+import sass from 'gulp-sass-no-nodesass';
 import cleanCss from 'gulp-clean-css';
 import sourcemaps from 'gulp-sourcemaps';
 import autoprefixer from 'gulp-autoprefixer';
@@ -13,6 +12,7 @@ import imagemin from 'gulp-imagemin';
 import through2 from 'through2';
 import minimist from 'minimist';
 import log from 'fancy-log';
+import Fiber from 'fibers';
 import webpackStream from 'webpack-stream';
 import webpack from 'webpack';
 import webpackDM from 'webpack-dev-middleware';
@@ -21,7 +21,10 @@ import browserSync from 'browser-sync';
 import htmlInjector from 'bs-html-injector';
 
 const argv = minimist(process.argv.slice(2), {
-  string: 'type', // --lang prod
+  string: 'mode', // --mode prod
+  boolean: 'debug', // --debug bool
+  boolean: 'source', // --debug bool
+  boolean: 'clean', // --clean bool
 });
 
 log(argv);
@@ -32,6 +35,8 @@ const webpackConfig = require('./webpack.config');
 const webpackConfigProd = require('./webpack.config.prod');
 
 const compiler = webpack(webpackConfig);
+
+sass.compiler = require('sass');
 
 const paths = {
   base: path.resolve(__dirname),
@@ -68,20 +73,20 @@ function reload(done) {
 // Checks with '--type prod' to run production build.
 export function styles() {
   return gulp.src(paths.styles.src)
-    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.init())
-    .pipe(sassGlob())
-    .pipe(sass())
+    .pipe(argv.debug || argv.source ? sourcemaps.init() : through2.obj())
+    .pipe(sass({fiber: Fiber}))
     .on('error', sass.logError)
     .pipe(autoprefixer({
       overrideBrowserlist: ['last 2 versions'],
       cascade: false,
     }))
-    .pipe(cleanCss())
+    .pipe(argv.type === 'prod' ? cleanCss() : through2.obj())
+    .pipe(argv.debug || argv.clean ? cleanCss() : through2.obj())
     .pipe(rename({
       basename: 'main',
       suffix: '.min',
     }))
-    .pipe(argv.type === 'prod' ? through2.obj() : sourcemaps.write('./'))
+    .pipe(argv.debug || argv.source ? sourcemaps.write('./') : through2.obj())
     .pipe(gulp.dest(paths.styles.dest))
     .pipe(bs.reload({ stream: true }));
 }
@@ -111,8 +116,6 @@ function serve(done) {
     middleware: [
       webpackDM(compiler, {
         publicPath: webpackConfig.output.publicPath,
-        // contentBase: paths.build.base,
-        // hot: true,
         stats: { colors: true },
         stats: 'errors-only',
       }),
