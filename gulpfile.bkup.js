@@ -4,7 +4,6 @@ const del = require('del');
 const rename = require('gulp-rename');
 const plumber = require('gulp-plumber');
 const sass = require('gulp-sass-no-nodesass');
-const sassGlob = require('gulp-sass-glob');
 const cleanCss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
 const autoprefixer = require('gulp-autoprefixer');
@@ -71,7 +70,6 @@ function reload(done) {
 function styles(cb) {
   return gulp.src(paths.styles.src, { since: gulp.lastRun(styles) })
     .pipe(argv.debug === 'yes' ? sourcemaps.init() : through2.obj())
-    .pipe(sassGlob())
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(autoprefixer({

@@ -5,7 +5,6 @@ import del from 'del';
 import rename from 'gulp-rename';
 import plumber from 'gulp-plumber';
 import sass from 'gulp-sass-no-nodesass';
-import sassGlob from 'gulp-sass-glob';
 import cleanCss from 'gulp-clean-css';
 import sourcemaps from 'gulp-sourcemaps';
 import autoprefixer from 'gulp-autoprefixer';
@@ -74,7 +73,6 @@ function reload(done) {
 export function styles() {
   return gulp.src(paths.styles.src)
     .pipe(argv.debug === 'yes' ? sourcemaps.init() : through2.obj())
-    .pipe(sassGlob())
     .pipe(sass({fiber: Fiber}))
     .on('error', sass.logError)
     .pipe(autoprefixer({
