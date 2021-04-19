@@ -21,7 +21,7 @@ import browserSync from 'browser-sync';
 import htmlInjector from 'bs-html-injector';
 
 const argv = minimist(process.argv.slice(2), {
-  string: 'mode', // --mode prod
+  string: 'type', // --type prod
   boolean: 'noinject',
   boolean: 'debug', // --debug bool
   boolean: 'source', // --debug bool
