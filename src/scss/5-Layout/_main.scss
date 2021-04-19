@@ -1,3 +1,5 @@
+@use '2-Tools/mixins' as mix;
+
 .name {
   margin: 0 auto;
   min-width: 300px;
@@ -6,7 +8,7 @@
 }
 
 .text {
-  @include ib(3px, #333, 1);
+  @include mix.ib(3px, #333, 1);
   margin: 0 auto;
   min-width: 300px;
   text-align: center;

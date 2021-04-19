@@ -1,3 +1,9 @@
+
+
+
+
+/* -------- Everything that is not your's bellow -------- */ 
+
 // -----------------------------------------------------------------------------
 // This file contains all application-wide Sass mixins.
 // -----------------------------------------------------------------------------
@@ -52,4 +58,51 @@
 
 @function strip-unit($value) {
   @return $value / ($value * 0 + 1);
+}
+
+/* -------- Inside borders -------- */
+
+/// @Source https://codepen.io/ricardozea/pen/klems
+/// Makes an inside borders via (box-shadow: inset … ;)
+/// @author Ricardo Zea
+/// With this mixin you can define 3 properties:
+/// @param {int/float} $thickness
+/// @param {mixed} $color
+/// @param {int/float} $alpha
+$_ib-defaults: (
+  thickness : 2px,
+  color     : black,
+  alpha     : .1
+) !default;
+
+@mixin inside-border($values...) {
+  $border-thickness: map-get($_ib-defaults, "thickness");
+  $border-color: map-get($_ib-defaults, "color");
+  $border-alpha: map-get($_ib-defaults, "alpha");
+
+  @each $value in $values {
+    @if type-of($value) == "number" {
+      @if unitless($value) {
+        $border-alpha: $value;
+      } 
+      
+      @else {
+        $border-thickness: $value;
+      }
+    } 
+    
+    @else if type-of($value) == "color" {
+      $border-color: $value;
+    }
+    
+    @else {
+      @warn "Warning! Unexpected value: `#{$value}`.";
+    }
+  }
+  
+  box-shadow: inset 0 0 0 $border-thickness rgba($border-color, $border-alpha);
+}
+
+@mixin ib($values...) {
+  @include inside-border($values...);
 }

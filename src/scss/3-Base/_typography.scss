@@ -1,3 +1,5 @@
+@use '1-Settings/colors';
+
 html {
   font-size: 100%;
 
@@ -27,7 +29,7 @@ h3,
 h4,
 h5,
 h6 {
-  color: $headings;
+  color: colors.$headings;
   // font-family: 'Quicksand', 'fira sans', 'sans-serif';
   font-weight: bold;
   letter-spacing: -.1rem;
@@ -36,7 +38,7 @@ h6 {
 }
 
 p {
-  color: $paragraph;
+  color: colors.$paragraph;
   margin: .6em 0;
 }
 
