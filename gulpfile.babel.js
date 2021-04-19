@@ -22,8 +22,9 @@ import htmlInjector from 'bs-html-injector';
 
 const argv = minimist(process.argv.slice(2), {
   string: 'mode', // --mode prod
-  string: 'debug', // --debug prod
-  string: 'clean', // --clean prod
+  boolean: 'debug', // --debug bool
+  boolean: 'source', // --debug bool
+  boolean: 'clean', // --clean bool
 });
 
 log(argv);
@@ -72,7 +73,7 @@ function reload(done) {
 // Checks with '--type prod' to run production build.
 export function styles() {
   return gulp.src(paths.styles.src)
-    .pipe(argv.debug === 'yes' ? sourcemaps.init() : through2.obj())
+    .pipe(argv.debug || argv.source ? sourcemaps.init() : through2.obj())
     .pipe(sass({fiber: Fiber}))
     .on('error', sass.logError)
     .pipe(autoprefixer({
@@ -80,12 +81,12 @@ export function styles() {
       cascade: false,
     }))
     .pipe(argv.type === 'prod' ? cleanCss() : through2.obj())
-    .pipe(argv.clean === 'yes' ? cleanCss() : through2.obj())
+    .pipe(argv.debug || argv.clean ? cleanCss() : through2.obj())
     .pipe(rename({
       basename: 'main',
       suffix: '.min',
     }))
-    .pipe(argv.debug === 'debug' ? sourcemaps.write('./') : through2.obj())
+    .pipe(argv.debug || argv.source ? sourcemaps.write('./') : through2.obj())
     .pipe(gulp.dest(paths.styles.dest))
     .pipe(bs.reload({ stream: true }));
 }

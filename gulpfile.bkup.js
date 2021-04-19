@@ -20,7 +20,10 @@ const browserSync = require('browser-sync');
 const htmlInjector = require('bs-html-injector');
 
 const argv = minimist(process.argv.slice(2), {
-  string: 'type', // --lang prod
+  string: 'type', //--type = prod
+  boolean: 'debug', // --debug bool
+  boolean: 'source', // --debug bool
+  boolean: 'clean', // --clean bool
 });
 
 log(argv);
@@ -69,7 +72,7 @@ function reload(done) {
 // Checks with '--type prod' to run production build.
 function styles(cb) {
   return gulp.src(paths.styles.src, { since: gulp.lastRun(styles) })
-    .pipe(argv.debug === 'yes' ? sourcemaps.init() : through2.obj())
+    .pipe(argv.debug || argv.source ? sourcemaps.init() : through2.obj())
     .pipe(sass())
     .on('error', sass.logError)
     .pipe(autoprefixer({
@@ -77,12 +80,12 @@ function styles(cb) {
       cascade: false,
     }))
     .pipe(argv.type === 'prod' ? cleanCss() : through2.obj())
-    .pipe(argv.clean === 'yes' ? cleanCss() : through2.obj())
+    .pipe(argv.debug || argv.clean ? cleanCss() : through2.obj())
     .pipe(rename({
       basename: 'main',
       suffix: '.min',
     }))
-    .pipe(argv.debug === 'debug' ? sourcemaps.write('./') : through2.obj())
+    .pipe(argv.debug || argv.source ? sourcemaps.write('./') : through2.obj())
     .pipe(gulp.dest(paths.styles.dest))
     .pipe(bs.reload({ stream: true }));
   cb();
