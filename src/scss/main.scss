@@ -1,63 +1,68 @@
 @charset 'UTF-8';
 
-// /*
-//  * Do not output CSS in section 1 and 2.
-//  * https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/
-//  */
+/* Do not output code in the first 2 sections. */
 
 // /**
 //  * SETTINGS.
-//  * fonts, colors, variables
+//  * colors, variables
 //  */
 
-@forward "1-Settings";
+// @use '1-Settings' as *;
 
 // /**
 //  * TOOLS.
 //  * Functions, mixins etc.
 //  */
 
-@forward '2-Tools';
+// @use '2-Tools' as *;
 
-// /**
-//  * GENERIC.
-//  * Low-specificity, far-reaching rulesets, Resets & Normalizers,
-//  * box-sizing definitions.
-//  */
+// I've decided that it makes no sense to @use settings and tools
+// in the main scss because unlike with global @imports exposing them
+// will have no other impact but increasing compile times.
 
-@forward '3-Generic';
+/* -------------- Start outputting code bellow -------------- */
 
 // /**
 //  * BASE.
-//  * Bare HTML styles & Unclassed HTML elements. (<p>, <body>)
+//  * Fonts.
+//  * Low-specificity, far-reaching rulesets, Resets & Normalizers.
+//  * Bare HTML styles & Unclassed HTML elements. (<p>, <body>) and helper classes.
+//  * box-sizing definitions.
 //  */
 
-@forward '4-Base';
+@use '3-Base' as *;
 
 // /**
 //  * OBJECTS.
-//  * Design-free objects, abstractions and patterns.
+//  * Objects and widgets
 //  */
 
-@forward '5-Objects';
+@use '4-Objects' as *;
 
 // /**
-//  * VENDOR.
-//  * Third party components.
+//  * Layout.
+//  * Defines the global wireframe.
 //  */
 
-@forward '8-Vendor';
+@use '5-Layout' as *;
 
 // /**
-//  * COMPONENTS.
-//  * Components and widgets.
+//  * PAGES.
+//  * Page specific stylings.
 //  */
 
-@forward '6-Components';
+@use '6-Pages' as *;
 
 // /**
-//  * TRUMPS.
-//  * Helper classes and overrides.
+//  * Vendors.
+//  * Third party libraries.
 //  */
 
-// @forward '7-Helper';
+@use '7-Vendor' as *;
+
+// /**
+//  * SHAME.
+//  * Where you hide your override shames.
+//  */
+
+@use '8-Shame' as *;
