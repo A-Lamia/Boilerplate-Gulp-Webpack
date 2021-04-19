@@ -5,7 +5,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 module.exports = {
   mode: 'development',
   entry: [
-    'webpack/hot/dev-server',
+    // 'webpack/hot/dev-server',
     'webpack-hot-middleware/client',
     './src/scripts/index.js',
   ],
@@ -18,7 +18,7 @@ module.exports = {
   plugins: [
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new BundleAnalyzerPlugin({ openAnalyzer: false }),
+    // new BundleAnalyzerPlugin({ openAnalyzer: false }),
   ],
   module: {
 
