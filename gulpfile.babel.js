@@ -119,8 +119,11 @@ function serve(done) {
         publicPath: webpackConfig.output.publicPath,
         stats: { colors: true },
         stats: 'errors-only',
+        // writeToDisk: true,
       }),
-      webpackHM(compiler),
+      webpackHM(compiler, {
+        reload: true,
+      }),
     ],
   });
   done();
