@@ -12,13 +12,13 @@ import imagemin from 'gulp-imagemin';
 import through2 from 'through2';
 import minimist from 'minimist';
 import log from 'fancy-log';
-import Fiber from 'fibers';
 import webpackStream from 'webpack-stream';
 import webpack from 'webpack';
 import webpackDM from 'webpack-dev-middleware';
 import webpackHM from 'webpack-hot-middleware';
 import browserSync from 'browser-sync';
 import htmlInjector from 'bs-html-injector';
+import pug from 'gulp-pug-3';
 
 const argv = minimist(process.argv.slice(2), {
   string: 'type', // --type prod
@@ -46,6 +46,10 @@ const paths = {
     js: './build/js',
     base: './build',
   },
+  pug: {
+    src: './src/pug/**/*.pug',
+    dest: './build',
+  },
   styles: {
     src: './src/scss/**/*.scss',
     dest: './build/css/',
@@ -63,11 +67,22 @@ const paths = {
   },
 };
 
-export const clean = () => del([paths.build.css, paths.build.js]);
+export const clean = () => del([
+  paths.build.css, 
+  paths.build.js,
+]);
 
 function reload(done) {
   bs.reload();
   done();
+}
+
+export function markup() {
+  return gulp.src(paths.pug.src)
+  .pipe(pug({
+    // pretty: true,
+  }))
+  .pipe(gulp.dest(paths.pug.dest));
 }
 
 // Style Tasks. SCSS -> CSS.
@@ -75,7 +90,7 @@ function reload(done) {
 export function styles() {
   return gulp.src(paths.styles.src)
     .pipe(argv.debug || argv.source ? sourcemaps.init() : through2.obj())
-    .pipe(sass({fiber: Fiber}))
+    .pipe(sass({}))
     .on('error', sass.logError)
     .pipe(autoprefixer({
       overrideBrowserlist: ['last 2 versions'],
@@ -168,8 +183,7 @@ export function watch() {
       log(`File ${location} was removed`);
       // code to execute on delete
     });
-  argv.noinject ?
-  gulp.watch(paths.markup.src, gulp.series(reload))
+  gulp.watch(paths.pug.src, gulp.series(markup))
     .on('change', (location) => {
       log(`File ${location} was changed`);
       // code to execute on change
@@ -178,7 +192,6 @@ export function watch() {
       log(`File ${location} was removed`);
       // code to execute on delete
     }) 
-    : through2.obj();
   gulp.watch(paths.images.src, gulp.series(images))
     .on('change', (location) => {
       log(`File ${location} was changed`);
@@ -195,6 +208,6 @@ export const img = gulp.series(images);
 
 export const build = gulp.series(clean, gulp.parallel(styles, scripts, images));
 
-const dev = gulp.series(clean, styles, serve, images, watch);
+const dev = gulp.series(clean, markup, styles, serve, images, watch);
 
 export default dev;
