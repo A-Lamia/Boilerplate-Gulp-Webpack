@@ -12,16 +12,17 @@ import imagemin from 'gulp-imagemin';
 import through2 from 'through2';
 import minimist from 'minimist';
 import log from 'fancy-log';
-import Fiber from 'fibers';
 import webpackStream from 'webpack-stream';
 import webpack from 'webpack';
 import webpackDM from 'webpack-dev-middleware';
 import webpackHM from 'webpack-hot-middleware';
 import browserSync from 'browser-sync';
 import htmlInjector from 'bs-html-injector';
+import pug from 'gulp-pug-3';
 
 const argv = minimist(process.argv.slice(2), {
   string: 'type', // --type prod
+  boolean: 'noinject', // --noinject bool
   boolean: 'debug', // --debug bool
   boolean: 'source', // --debug bool
   boolean: 'clean', // --clean bool
@@ -45,6 +46,11 @@ const paths = {
     js: './build/js',
     base: './build',
   },
+  pug: {
+    src: './src/pug/**/!(_)*.pug',
+    src_watch: './src/pug/**/*.pug',
+    dest: './build',
+  },
   styles: {
     src: './src/scss/**/*.scss',
     dest: './build/css/',
@@ -62,11 +68,23 @@ const paths = {
   },
 };
 
-export const clean = () => del([paths.build.css, paths.build.js]);
+export const clean = () => del([
+  paths.build.css, 
+  paths.build.js,
+]);
 
 function reload(done) {
   bs.reload();
   done();
+}
+
+export function markup() {
+  return gulp.src(paths.pug.src)
+  .pipe(pug({
+    // pretty: true,
+  }))
+  .pipe(gulp.dest(paths.pug.dest))
+  .pipe(argv.noinject ? bs.reload({ stream: true }) : through2.obj());
 }
 
 // Style Tasks. SCSS -> CSS.
@@ -74,7 +92,7 @@ function reload(done) {
 export function styles() {
   return gulp.src(paths.styles.src)
     .pipe(argv.debug || argv.source ? sourcemaps.init() : through2.obj())
-    .pipe(sass({fiber: Fiber}))
+    .pipe(sass({}))
     .on('error', sass.logError)
     .pipe(autoprefixer({
       overrideBrowserlist: ['last 2 versions'],
@@ -104,7 +122,7 @@ export function scripts() {
 }
 
 function serve(done) {
-  bs.use(htmlInjector, {
+  argv.noinject ? through2.obj() : bs.use(htmlInjector, {
     files: paths.markup.src,
   });
   bs.init({
@@ -167,15 +185,15 @@ export function watch() {
       log(`File ${location} was removed`);
       // code to execute on delete
     });
-  // gulp.watch(paths.markup.src, gulp.series(reload))
-  //   .on('change', (location) => {
-  //     log(`File ${location} was changed`);
-  //     // code to execute on change
-  //   })
-  //   .on('unlink', (location) => {
-  //     log(`File ${location} was removed`);
-  //     // code to execute on delete
-  //   });
+  gulp.watch(paths.pug.src_watch, gulp.series(markup))
+    .on('change', (location) => {
+      log(`File ${location} was changed`);
+      // code to execute on change
+    })
+    .on('unlink', (location) => {
+      log(`File ${location} was removed`);
+      // code to execute on delete
+    }) 
   gulp.watch(paths.images.src, gulp.series(images))
     .on('change', (location) => {
       log(`File ${location} was changed`);
@@ -190,8 +208,8 @@ export function watch() {
 
 export const img = gulp.series(images);
 
-export const build = gulp.series(clean, gulp.parallel(styles, scripts, images));
+export const build = gulp.series(clean, gulp.parallel(markup, styles, scripts, images));
 
-const dev = gulp.series(clean, styles, serve, images, watch);
+const dev = gulp.series(clean, markup, styles, serve, images, watch);
 
 export default dev;
