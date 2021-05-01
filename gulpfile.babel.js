@@ -22,7 +22,7 @@ import pug from 'gulp-pug-3';
 
 const argv = minimist(process.argv.slice(2), {
   string: 'type', // --type prod
-  boolean: 'noinject',
+  boolean: 'noinject', // --noinject bool
   boolean: 'debug', // --debug bool
   boolean: 'source', // --debug bool
   boolean: 'clean', // --clean bool
@@ -47,7 +47,8 @@ const paths = {
     base: './build',
   },
   pug: {
-    src: './src/pug/**/*.pug',
+    src: './src/pug/**/!(_)*.pug',
+    src_watch: './src/pug/**/*.pug',
     dest: './build',
   },
   styles: {
@@ -82,7 +83,8 @@ export function markup() {
   .pipe(pug({
     // pretty: true,
   }))
-  .pipe(gulp.dest(paths.pug.dest));
+  .pipe(gulp.dest(paths.pug.dest))
+  .pipe(argv.noinject ? bs.reload({ stream: true }) : through2.obj());
 }
 
 // Style Tasks. SCSS -> CSS.
@@ -183,7 +185,7 @@ export function watch() {
       log(`File ${location} was removed`);
       // code to execute on delete
     });
-  gulp.watch(paths.pug.src, gulp.series(markup))
+  gulp.watch(paths.pug.src_watch, gulp.series(markup))
     .on('change', (location) => {
       log(`File ${location} was changed`);
       // code to execute on change
@@ -206,7 +208,7 @@ export function watch() {
 
 export const img = gulp.series(images);
 
-export const build = gulp.series(clean, gulp.parallel(styles, scripts, images));
+export const build = gulp.series(clean, gulp.parallel(markup, styles, scripts, images));
 
 const dev = gulp.series(clean, markup, styles, serve, images, watch);
 

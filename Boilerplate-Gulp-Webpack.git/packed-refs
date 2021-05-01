@@ -1,8 +1,0 @@
-# pack-refs with: peeled fully-peeled sorted 
-4e59e79613d72cc9cefe2dc57a9301a1062427a2 refs/heads/Sass-Updates
-22f6331d4be2023fe0f5f1249e5c7b023b1d0186 refs/heads/master
-fa035e751b57ceaa61efb383585d47fe3ee9bce6 refs/heads/sass-new-file-structure
-22f6331d4be2023fe0f5f1249e5c7b023b1d0186 refs/remotes/origin/HEAD
-4e59e79613d72cc9cefe2dc57a9301a1062427a2 refs/remotes/origin/Sass-Updates
-0bf34ccb454f7addd0c6d8c522428ceef9c51b01 refs/remotes/origin/Update
-22f6331d4be2023fe0f5f1249e5c7b023b1d0186 refs/remotes/origin/master
