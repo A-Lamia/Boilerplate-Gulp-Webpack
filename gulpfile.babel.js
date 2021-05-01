@@ -45,6 +45,7 @@ const paths = {
     css: './build/css',
     js: './build/js',
     base: './build',
+    markup: './build/**/*.html'
   },
   pug: {
     src: './src/pug/**/!(_)*.pug',
@@ -71,6 +72,7 @@ const paths = {
 export const clean = () => del([
   paths.build.css, 
   paths.build.js,
+  paths.build.markup,
 ]);
 
 function reload(done) {

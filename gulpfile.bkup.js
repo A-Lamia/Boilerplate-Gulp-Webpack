@@ -11,7 +11,6 @@ const imagemin = require('gulp-imagemin');
 const through2 = require('through2');
 const minimist = require('minimist');
 const log = require('fancy-log');
-const Fiber = reqire('fibers');
 const webpackStream = require('webpack-stream');
 const webpack = require('webpack');
 const webpackDM = require('webpack-dev-middleware');
@@ -40,32 +39,54 @@ sass.compiler = require('sass');
 const paths = {
   base: path.resolve(__dirname),
   build: {
-    css: path.resolve(__dirname, './build/css'),
-    js: path.resolve(__dirname, './build/js'),
-    base: path.resolve(__dirname, './build'),
+    css: './build/css',
+    js: './build/js',
+    base: './build',
+    markup: './build/**/*.html'
+  },
+  pug: {
+    src: './src/pug/**/!(_)*.pug',
+    src_watch: './src/pug/**/*.pug',
+    dest: './build',
   },
   styles: {
-    src: path.resolve(__dirname, './src/scss/**/*.scss'),
-    dest: path.resolve(__dirname, './build/css/'),
+    src: './src/scss/**/*.scss',
+    dest: './build/css/',
   },
   scripts: {
-    src: path.resolve(__dirname, 'src/scripts/**/*.js'),
-    dest: path.resolve(__dirname, './build/js/'),
+    src: 'src/scripts/**/*.js',
+    dest: './build/js/',
   },
   markup: {
-    src: path.resolve(__dirname, './build/**/*.html'),
+    src: './build/**/*.html',
   },
   images: {
-    src: path.resolve(__dirname, './src/img/**/*'),
-    dest: path.resolve(__dirname, './build/img/'),
+    src: './src/img/**/*',
+    dest: './build/img/',
   },
 };
 
-function clean(cb) { del([paths.build.css, paths.build.js]); cb(); }
+function clean(cb) { 
+  del([
+    paths.build.css, 
+    paths.build.js,
+    paths.build.markup
+  ]); 
+  cb(); }
 
 function reload(done) {
   bs.reload();
   done();
+}
+
+function markup(cb) {
+  return gulp.src(paths.pug.src)
+    .pipe(pug({
+      // pretty: true,
+    }))
+    .pipe(gulp.dest(paths.pug.dest))
+    .pipe(argv.noinject ? bs.reload({ stream: true }) : through2.obj());
+  cb();
 }
 
 // Style Tasks. SCSS -> CSS.
@@ -105,7 +126,7 @@ function scripts(cb) {
 }
 
 function serve(done) {
-  bs.use(htmlInjector, {
+  argv.noinject ? through2.obj() : bs.use(htmlInjector, {
     files: paths.markup.src,
   });
   bs.init({
@@ -165,15 +186,15 @@ function watch(cb) {
       log(`File ${location} was removed`);
       // code to execute on delete
     });
-  // gulp.watch(paths.markup.src, gulp.series(reload))
-  //   .on('change', (location) => {
-  //     log(`File ${location} was changed`);
-  //     // code to execute on change
-  //   })
-  //   .on('unlink', (location) => {
-  //     log(`File ${location} was removed`);
-  //     // code to execute on delete
-  //   });
+  gulp.watch(paths.markup.src, gulp.series(markup))
+    .on('change', (location) => {
+      log(`File ${location} was changed`);
+      // code to execute on change
+    })
+    .on('unlink', (location) => {
+      log(`File ${location} was removed`);
+      // code to execute on delete
+    });
   gulp.watch(paths.images.src, gulp.series(images))
     .on('change', (location) => {
       log(`File ${location} was changed`);
@@ -188,7 +209,7 @@ function watch(cb) {
 
 gulp.task('img', gulp.series(clean, images));
 
-gulp.task('build', gulp.series(clean, gulp.parallel(styles, scripts, images)));
+gulp.task('build', gulp.series(clean, gulp.parallel(markup, styles, scripts, images)));
 
-gulp.task('default', gulp.series(clean, styles, serve, images, watch));
+gulp.task('default', gulp.series(clean, markup, styles, serve, images, watch));
 
